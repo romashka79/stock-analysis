@@ -58,6 +58,14 @@ Sub DQAnalysis()
 End Sub
 
 Sub AllStocksAnalysis()
+
+        Dim startTime As Single
+        Dim endTime As Single
+        
+          yearValue = InputBox("What year would you like to run the analysis on?")
+    
+          startTime = Timer
+          
     '1)Format the outputsheet on All Stocks Analysis worksheet
     
     Worksheets("All Stocks Analysis").Activate
@@ -150,7 +158,9 @@ Sub AllStocksAnalysis()
                      
         
         Next i
-    
+   
+    endTime = Timer
+    MsgBox " This code ran in " & (endTime - startTime) & " seconds for the year " & (yearValue)
     
 End Sub
 
@@ -193,6 +203,25 @@ Sub formatAllStocksAnalysisTable()
     End If
     
     Next i
+
+    
+End Sub
+
+Sub ClearWorksheet()
+
+    Cells.Clear
+    
+End Sub
+
+Sub yearValueAnalysis()
+
+    yearValue = InputBox("What year would you like to run the analysis on?")
+    
+    Range("A1").Value = "All Stocks (" + yearValue + ")"
+    
+    Sheets("All Stocks Analysis").Activate
+    Sheets(yearValue).Activate
+    
     
 End Sub
 
