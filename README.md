@@ -66,7 +66,7 @@ Sub AllStocksAnalysis()
     
           startTime = Timer
           
-    '1)Format the outputsheet on All Stocks Analysis worksheet
+    '1)Format the output sheet on All Stocks Analysis worksheet
     
     Worksheets("All Stocks Analysis").Activate
     
@@ -180,17 +180,17 @@ Sub formatAllStocksAnalysisTable()
     Columns("B").AutoFit
     
     dataRowStart = 4
-    DateRowEnd = 15
+    dataRowEnd = 15
     
     For i = dataRowStart To dataRowEnd
     
-    If Cells(i, 3) > 0 Then
+    If Cells(i, 3).Value > 0 Then
     
         'Change the cell color to green
         
         Cells(i, 3).Interior.Color = vbGreen
     
-    ElseIf Cells(i, 3) < 0 Then
+    ElseIf Cells(i, 3).Value < 0 Then
     
         'color the cell red
         Cells(i, 3).Interior.Color = vbRed
