@@ -1,228 +1,28 @@
 # stock-analysis
-Sub DQAnalysis()
 
-    Worksheets("DQ Analysis").Activate
-    
-    Range("A1").Value = "DAQO (Ticker: DQ)"
-    
-    'Create a header row
-    Cells(3, 1).Value = "Year"
-    Cells(3, 2).Value = "Total Daily Volume"
-    Cells(3, 3).Value = "Return"
+## Overview of Project
 
-    Worksheets("2018").Activate
-    
-    'set initial volume to zero
-    totalVolume = 0
-    
-    Dim startingPrice As Double
-    Dim endingPrice As Double
-    
-    'Establish the number of rows to loop over
-    rowStart = 2
-    rowEnd = Cells(Rows.Count, "A").End(xlUp).Row
-    
-    
-    'loop over all the rows
-    
-    For i = rowStart To rowEnd
-    
-        
-        If Cells(i, 1).Value = "DQ" Then
-        
-            'increase totalVolume by the value in the current row
-            totalVolume = totalVolume + Cells(i, 8).Value
-        
-        End If
-        
-        
-        If Cells(i - 1, 1).Value <> "DQ" And Cells(i, 1).Value = "DQ" Then
-        
-            startingPrice = Cells(i, 6).Value
-            
-        End If
-        
-        If Cells(i + 1, 1).Value <> "DQ" And Cells(i, 1).Value = "DQ" Then
-        
-            endingPrice = Cells(i, 6).Value
-        
-        End If
+### Purpose
 
-    Next i
+The purpose of this challenge is to refactor the code to be able to analyze a large portion of stock data in a faster and more efficient way by looping through all the data one time.
 
-    Worksheets("DQ Analysis").Activate
-    Cells(4, 1).Value = 2018
-    Cells(4, 2).Value = totalVolume
-    Cells(4, 3).Value = (endingPrice / startingPrice) - 1
+### Background Information
 
-End Sub
+A customer provided a dataset containing the stock information (ticker value, the stock issuing date, opening/closing/adjusted closing and highest/lowest prices, the volume) for the years of 2017 and 2018. An initially written code was functional in evaluating a small number of stocks, however, might appear to be inefficient and time consuming in analyzing large quantities of stocks. Thus, we have been asked to defactor the current code to accommodate larger stock datasets. 
 
-Sub AllStocksAnalysis()
+## Results
 
-        Dim startTime As Single
-        Dim endTime As Single
-        
-          yearValue = InputBox("What year would you like to run the analysis on?")
-    
-          startTime = Timer
-          
-    '1)Format the output sheet on All Stocks Analysis worksheet
-    
-    Worksheets("All Stocks Analysis").Activate
-    
-    Range("A1").Value = "All Stocks (2018)"
-    
-    'create a header row
-    
-    Cells(3, 1).Value = "Ticker"
-    Cells(3, 2).Value = "Total Daily Volume"
-    Cells(3, 3).Value = "Return"
-    
-    '2) Initialize array of all tickers
-    
-    Dim tickers(11) As String
-    
-    tickers(0) = "AY"
-    tickers(1) = "CSIQ"
-    tickers(2) = "DQ"
-    tickers(3) = "ENPH"
-    tickers(4) = "FSLR"
-    tickers(5) = "HASI"
-    tickers(6) = "JKS"
-    tickers(7) = "RUN"
-    tickers(8) = "SEDG"
-    tickers(9) = "SPWR"
-    tickers(10) = "TERP"
-    tickers(11) = "VSLR"
-    
-    '3a) Initialize variables for starting price and ending price
-    
-    Dim startingPrice As Double
-    Dim endingPrice As Double
-    
-    '3b) Activate data worksheet
-    
-    Worksheets("2018").Activate
-    
-    '3c) Get the number of rows to loop over
-    
-    RowCount = Cells(Rows.Count, "A").End(xlUp).Row
-    
-    
-    '4) Loop through tickers
-    
-        For i = 0 To 11
-        
-            ticker = tickers(i)
-        
-            totalVolume = 0
-            
-            '5) Loop through rows in the data
-            
-            Worksheets("2018").Activate
-            
-            For j = 2 To RowCount
-            
-                '5a) get total volume for current ticker
-                
-                If Cells(j, 1).Value = ticker Then
-                
-                    totalVolume = totalVolume + Cells(j, 8).Value
-                
-                End If
-                
-                '5b) get starting price for current ticker
-                
-                If Cells(j - 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
-                
-                    startingPrice = Cells(j, 6).Value
-                
-                End If
-                                    
-                '5c) find ending price for current ticker
-                
-                If Cells(j + 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
-                
-                    endingPrice = Cells(j, 6).Value
-                
-                End If
-                        
-            Next j
-        
-            '6) Output data for current ticker
-            
-                Worksheets("All Stocks Analysis").Activate
-                Cells(4 + i, 1).Value = ticker
-                Cells(4 + i, 2).Value = totalVolume
-                Cells(4 + i, 3).Value = endingPrice / startingPrice - 1
-                     
-        
-        Next i
-   
-    endTime = Timer
-    MsgBox " This code ran in " & (endTime - startTime) & " seconds for the year " & (yearValue)
-    
-End Sub
+The final analysis of the stock datasets for 2017 and 2018 years revealed higher Total Daily Volume for most of the stock trading in 2017, thus, leading to growth/higher returns at the end of the calendar year. The Total Daily Volume significantly dropped in 2018 resulting in substantial financial losses. There were only two stocks that had showed a higher total daily volume and a growth/higher return in 2018. 
 
-Sub formatAllStocksAnalysisTable()
-    
-    'formatting
-    
+Please see the tables below. Growth is shown in green and losses are shown in red. 
 
-    Worksheets("All Stocks Analysis").Activate
-    
-    Range("A3:C3").Font.Bold = True
-    Range("A3:C3").Borders(xlEdgeBottom).LineStyle = xlContinuous
-  
-    Range("B4:B15").NumberFormat = "#,##0"
-    Range("C4:C15").NumberFormat = "0.0%"
-    
-    Columns("B").AutoFit
-    
-    dataRowStart = 4
-    dataRowEnd = 15
-    
-    For i = dataRowStart To dataRowEnd
-    
-    If Cells(i, 3).Value > 0 Then
-    
-        'Change the cell color to green
-        
-        Cells(i, 3).Interior.Color = vbGreen
-    
-    ElseIf Cells(i, 3).Value < 0 Then
-    
-        'color the cell red
-        Cells(i, 3).Interior.Color = vbRed
-    
-    Else
-    
-        'clear the cell color
-        Cells(i, 3).Interior.Color = xlNone
-    
-    End If
-    
-    Next i
+Stock Data for 2017
 
-    
-End Sub
+![2017_Stocks](resources/2017_Stocks.png).
 
-Sub ClearWorksheet()
+Stock Data for 2018
 
-    Cells.Clear
-    
-End Sub
+![2018_Stocks](resources/2018_Stocks.png).
 
-Sub yearValueAnalysis()
-
-    yearValue = InputBox("What year would you like to run the analysis on?")
-    
-    Range("A1").Value = "All Stocks (" + yearValue + ")"
-    
-    Sheets("All Stocks Analysis").Activate
-    Sheets(yearValue).Activate
-    
-    
-End Sub
 
 
